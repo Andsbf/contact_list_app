@@ -6,7 +6,7 @@ class Contact
 
   attr_accessor :name, :email
 
-  def initialize(name, email)
+  def initialize(name="default-value", email="default-value")
     @name = name
     @email = email
 
@@ -19,22 +19,33 @@ class Contact
   ## Class Methods
   class << self
     def create(name, email)
-      contact_instance = Contact.new(name,email)
+      contact_instance = Contact.new(name,email) 
       ContactDatabase::add(contact_instance)
     end
  
-    def find(string)
+    def find(string) #return contact(s) or nil 
       catalog = ContactDatabase::read
-      
+      contact_finded = []
+
       catalog.each_with_index do |row,index| 
   
-        row.grep( Regexp.new( string , "i") ) != [] ? row.each{|i| puts"#{i}"} : "Contact not found" 
-      end
+        if row.grep( Regexp.new( string , "i") ) != [] 
+         contact_finded << row
+        end
 
+      end
+      contact_finded = nil if contact_finded == []
+      contact_finded
     end
- 
+
+    def find_exactly(string,user_or_email) #return contact or nil 
+      user_or_email == "email" ? (user_or_email = 0) : user_or_email = 1
+      Contact::find(string).collect{ |x| x[user_or_email]==string}
+    end
+
+
     def all
-      # binding.pry
+      
       ContactDatabase::print_all
     end
     
@@ -47,4 +58,5 @@ class Contact
   end
  
 end
+
 
