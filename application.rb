@@ -6,8 +6,9 @@ class Application
     puts "Here is a list of available commands:
        new  - Create a new contact
        list - List all contacts
-       show - Show a contact
-       find - Find a contact"
+       show 'id' - Show a contact
+       find 'blah'- Find a contact
+       delete  'id - Delete a contact'"
   end
 
 
@@ -15,17 +16,22 @@ class Application
     
     case ARGV[0]
     when "new"
-      self.create
+      create_contact
     when "list"
-      Contact.all
+      list #lists all contacts
     when "show"
-      id = (ARGV[1].to_i) -1 #minus 1 adjust to ID to db array
-      Contact.show(id) 
+      show_id
     when "find"
-      contact_finded = Contact.find(ARGV[1].downcase) rescue "Please type something after find"
-      contact_finded.each{|x| puts "#{x[0]} : #{x[1]}" }
+      contact_finded = Contact.find(ARGV[1].downcase) 
+      contact_finded.each{|x| x.display}
     when "help"
       self.help
+    when "phone"
+      add_phone
+    when "delete"
+      delete(ARGV[1].to_i)
+    when "update"
+      update(ARGV[1].to_i)
     else
       p "Option not found, try again"
          
@@ -33,23 +39,65 @@ class Application
     
   end
 
-  def create
+  def create_contact
     p "Please input contact email:"
-    contact_email = STDIN.gets.chomp
-    return p "This Email already exist in you contact list!"  if Application::repeated_mail?(contact_email) 
-    p "Please input contact full name:"
-    contact_full_name = STDIN.gets.chomp
-    contact_instance = Contact.create(contact_full_name, contact_email)
-  
+    email = STDIN.gets.chomp  
+    if new?(email) == []
+    p "Please input contact first name:"
+    fname = STDIN.gets.chomp
+    p "Please input contact last name:"
+    lname = STDIN.gets.chomp
+    Contact.create(fname, lname, email)
+    else
+    p "Email already exists in your contact list!"
+    end
   end
-  
+    
+  def list
+    Contact.all.each { |contact| contact.display }
+  end
+
   private
 
-  def self.repeated_mail? contact_email_or_name
-    
-    Contact.find_exactly(contact_email_or_name,"email") ? true : false rescue false
-      
+  def new?(email)
+    Contact.new?(email)
   end
+
+  def show_id
+    id = (ARGV[1].to_i)
+    raise "Empty input" if ARGV[1] == nil
+    contact_to_show = Contact.find_by_id(id) 
+    contact_to_show ? contact_to_show.display : (puts "ID not found!")
+    rescue
+    p "please input a contact id"
+  end
+
+  def delete(id)
+    Contact.delete(id)
+    list
+  end
+
+  def update(id)
+
+    tobe_updated = Contact.find_by_id(id)
+    tobe_updated.display
+    p "what do you want to update in?(type email of name)"
+    what_to_update = STDIN.gets.chomp
+    return nil unless ["email", "name"].include? what_to_update
+    p "type new #{what_to_update}:"
+    new_data = STDIN.gets.chomp
+    
+    case what_to_update
+    when "email"
+      tobe_updated.email = new_data
+    when "name"
+      tobe_updated.name = new_data
+    end
+
+    Contact.update(tobe_updated)
+    list
+  end
+
 
 end
 

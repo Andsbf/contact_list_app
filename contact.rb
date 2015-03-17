@@ -2,61 +2,56 @@ require_relative 'contact_database'
 
 class Contact
 
-  include ContactDatabase  
+  include ContactDatabase 
 
-  attr_accessor :name, :email
+  attr_accessor :fname, :lname, :email, :id
 
-  def initialize(name="default-value", email="default-value")
-    @name = name
+  def initialize(fname, lname, email, id=nil)
+    @fname = fname
+    @lname = lname
     @email = email
+    @id = id
 
   end
  
-  def to_s
-    # TODO: return string representation of Contact
+  def display
+    puts "#{id} - #{fname} #{lname}: #{email}"
   end
  
   ## Class Methods
   class << self
-    def create(name, email)
-      contact_instance = Contact.new(name,email) 
-      ContactDatabase::add(contact_instance)
+    def create(fname, lname, email)
+      ContactDatabase::add(Contact.new(fname, lname, email))
     end
  
     def find(string) #return contact(s) or nil 
-      catalog = ContactDatabase::read
-      contact_finded = []
-
-      catalog.each_with_index do |row,index| 
-  
-        if row.grep( Regexp.new( string , "i") ) != [] 
-         contact_finded << row
-        end
-
+      string = Regexp.new(string,'i')
+      all.select do |contact|
+        (string =~ contact.fname) || (string =~ contact.lname) || (string =~ contact.email) 
       end
-      contact_finded = nil if contact_finded == []
-      contact_finded
     end
 
-    def find_exactly(string,user_or_email) #return contact or nil 
-      user_or_email == "email" ? (user_or_email = 0) : user_or_email = 1
-      Contact::find(string).collect{ |x| x[user_or_email]==string}
-    end
-
-
-    def all
-      
-      ContactDatabase::print_all
+    def all #returns array with all contacts
+      all_array = ContactDatabase::read
+      all_array.map {|contact| Contact.new(contact["fname"],contact["lname"],contact["email"],contact["id"].to_i) }   
     end
     
-    def show(id)
-      catalog = ContactDatabase::read
-
-      catalog[id].each{|x| puts x}
+    def find_by_id(id)
+      all.select{ |contact| contact.id == id }.first
     end
-    
+
+    def delete(id)
+      ContactDatabase::delete(id)
+    end
+
+    def new?(email)
+      find(email)
+    end
+
+    def update(contact)
+      ContactDatabase::update(contact)
+    end
   end
- 
 end
 
 

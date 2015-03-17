@@ -1,37 +1,40 @@
 ## TODO: Implement CSV reading/writing
 # require_relative 'contact.rb'
 require 'csv'
+require 'pg'
 
 module ContactDatabase 
 
-  def self.print_all
-    # binding.pry
-    i = 0
-    puts ""
-    CSV.foreach('contacts.csv') do |name,email|
-      i += 1
-      puts "#{i}: #{name} (#{email})"
-    end
-    puts "---\n#{self.length} record(s) total"
-  end
+
+  CONN = PG::Connection.new(
+                              host: 'ec2-23-23-215-150.compute-1.amazonaws.com',
+                              user: 'wzmatxiwqinsmz',
+                              password: 'Mf3EaZWWK3YtRXZTA3nNz49m3Z',
+                              dbname: 'davsgajl46v1v9' 
+                            )
 
   def self.add(contact)
-
-    CSV.open('contacts.csv', 'a') do |csv_object|  
-      csv_object << [contact.name, contact.email]
-    end
+    CONN.exec_params('INSERT INTO contacts (fname, lname, email)
+                      VALUES ($1, $2, $3) returning id', [contact.fname, contact.lname, contact.email])
+    
   end
 
   def self.read
-    CSV.read("contacts.csv")
+    all=[]
+    CONN.exec_params('SELECT * FROM contacts ORDER BY id') do |rows|
+      rows.each do |row|
+        all << row
+      end
+    end
+  all
   end
 
-  private
-
-  def self.length
-    # binding.pry
-    db = CSV.read("contacts.csv")
-    db.length
+  def self.delete(id)
+    CONN.exec_params('DELETE FROM contacts WHERE id = $1',[id]) 
+  end
+  
+  def self.update(contact)
+    CONN.exec_params('UPDATE contacts SET fname = $1, lname = $2 ,email = $3 WHERE id = $4 returning id', [contact.fname, contact.lname, contact.email, contact.id])
   end
 
 end

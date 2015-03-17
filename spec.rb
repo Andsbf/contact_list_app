@@ -20,7 +20,7 @@ describe Contact do
     end
   end
 
-    describe "#find_exactly" do
+  describe "#find_exactly" do
     it "should return array with contact if contact is find" do
       result = Contact.find("and") #and sure is in DB
       expect(result).to be_kind_of(Array)
@@ -31,8 +31,6 @@ describe Contact do
       expect(result).to be(NilClass)
     end
   end
-
-
 end
 
 describe Application do 
@@ -52,21 +50,15 @@ describe Application do
         result = Application.repeated_mail? ("Blah")
         expect(result).to be(false)
       end
-
-
     end
 
+    describe"#add_phone" do
+
+      it "return 'old' contact with phone" do
+
+      end
+    end
 
 
 end
 
-  # describe "#find" do
-  #   it "should return true if we used the chair" do
-  #     @tamer.should_receive(:can_use_chair?).and_return true
-  #     expect(@tamer.chair_lion).to eq("The lion roars.")
-  #   end
- 
-  #   it "should return false if don't have a chair" do
-  #     @tamer.should_receive(:can_use_chair?).and_return false
-  #     expect(@tamer.chair_lion).to eq("The lion eats you.")
-  #   end
