@@ -79,19 +79,21 @@ class Application
 
   def update(id)
 
+    return nil if id == 0
     tobe_updated = Contact.find_by_id(id)
     tobe_updated.display
     p "what do you want to update in?(type email of name)"
     what_to_update = STDIN.gets.chomp
-    return nil unless ["email", "name"].include? what_to_update
-    p "type new #{what_to_update}:"
-    new_data = STDIN.gets.chomp
-    
+
     case what_to_update
     when "email"
+      p "type new email:"
+      new_data = STDIN.gets.chomp
       tobe_updated.email = new_data
     when "name"
-      tobe_updated.name = new_data
+      p "type new first name:"
+      new_data = STDIN.gets.chomp
+      tobe_updated.fname = new_data
     end
 
     Contact.update(tobe_updated)

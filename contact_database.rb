@@ -37,6 +37,10 @@ module ContactDatabase
     CONN.exec_params('UPDATE contacts SET fname = $1, lname = $2 ,email = $3 WHERE id = $4 returning id', [contact.fname, contact.lname, contact.email, contact.id])
   end
 
+  def find_by_id(id)
+    
+  end
+
 end
 
 
