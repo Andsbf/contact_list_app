@@ -39,7 +39,9 @@ module ContactDatabase
   end
 
   def self.find_by_id(id)
-    CONN.exec_params('SELECT * FROM contacts WHERE id = $1',[id])
+    CONN.exec_params('SELECT c.id, c.fname, c.lname, c.email, p.type, p.num
+                      FROM contacts AS c LEFT OUTER JOIN phones AS p 
+                      ON (c.id = p.contact_id) WHERE c.id = $1',[id])
   end
 
   def self.search(string)
@@ -47,6 +49,11 @@ module ContactDatabase
                       WHERE LOWER(fname) LIKE $1
                             OR LOWER(lname) LIKE $1 
                             OR LOWER(email) LIKE $1 ORDER BY id" ,["%#{string}%"])
+  end
+
+  def self.add_phone(phone)
+      CONN.exec_params('INSERT INTO phones (contact_id, type, num)
+                      VALUES ($1, $2, $3) returning id', [phone.contact_id, phone.type, phone.num])
   end
 end
 
