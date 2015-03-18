@@ -35,7 +35,6 @@ class Application
       update(ARGV[1].to_i)
     else
       p "Option not found, try again"
-         
     end
     
   end
@@ -81,7 +80,9 @@ class Application
   def update(id)
 
     return nil if id == 0
-    tobe_updated = Contact.find_by_id(id)
+    
+    tobe_updated = Contact.find_by_id(id) 
+    
     tobe_updated.display
     p "what do you want to update in?(type email of name)"
     what_to_update = STDIN.gets.chomp
@@ -95,10 +96,13 @@ class Application
       p "type new first name:"
       new_data = STDIN.gets.chomp
       tobe_updated.fname = new_data
+    else
+      raise "invalid Field"
     end
-
+    
     Contact.update(tobe_updated)
     list
+    rescue NoMethodError,"Invalid ID"
   end
 
 
