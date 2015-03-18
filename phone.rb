@@ -1,6 +1,4 @@
-require_relative 'contact_database'
-
-class Phone
+class Phone < ActiveRecord::Base
 
   attr_accessor :num, :type, :contact_id
 
