@@ -5,6 +5,7 @@ require 'pg'
 
 module ContactDatabase 
 
+# Psql:  heroku pg:psql --app heroku-postgres-05dfbfb3 HEROKU_POSTGRESQL_CRIMSON
 
   CONN = PG::Connection.new(
                               host: 'ec2-23-23-215-150.compute-1.amazonaws.com',
@@ -37,10 +38,16 @@ module ContactDatabase
     CONN.exec_params('UPDATE contacts SET fname = $1, lname = $2 ,email = $3 WHERE id = $4 returning id', [contact.fname, contact.lname, contact.email, contact.id])
   end
 
-  def find_by_id(id)
-    
+  def self.find_by_id(id)
+    CONN.exec_params('SELECT * FROM contacts WHERE id = $1',[id])
   end
 
+  def self.search(string)
+    CONN.exec_params("SELECT * FROM contacts 
+                      WHERE LOWER(fname) LIKE $1
+                            OR LOWER(lname) LIKE $1 
+                            OR LOWER(email) LIKE $1 ORDER BY id" ,["%#{string}%"])
+  end
 end
 
 

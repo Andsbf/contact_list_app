@@ -24,11 +24,9 @@ class Contact
       ContactDatabase::add(Contact.new(fname, lname, email))
     end
  
-    def find(string) #return contact(s) or nil 
-      string = Regexp.new(string,'i')
-      all.select do |contact|
-        (string =~ contact.fname) || (string =~ contact.lname) || (string =~ contact.email) 
-      end
+    def search(string) #return contact(s) or nil 
+      search_result = ContactDatabase::search(string.downcase)
+      search_result.map {|contact| Contact.new(contact["fname"],contact["lname"],contact["email"],contact["id"].to_i) }   
     end
 
     def all #returns array with all contacts
@@ -37,7 +35,8 @@ class Contact
     end
     
     def find_by_id(id)
-      all.select{ |contact| contact.id == id }.first
+      contact = ContactDatabase::find_by_id(id).first
+      Contact.new(contact["fname"],contact["lname"],contact["email"],contact["id"].to_i)
     end
 
     def delete(id)
@@ -45,7 +44,7 @@ class Contact
     end
 
     def new?(email)
-      find(email)
+      search(email)
     end
 
     def update(contact)

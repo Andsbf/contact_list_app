@@ -8,7 +8,7 @@ class Application
        list - List all contacts
        show 'id' - Show a contact
        find 'blah'- Find a contact
-       delete  'id - Delete a contact'"
+       delete  'id' - Delete a contact"
   end
 
 
@@ -22,7 +22,8 @@ class Application
     when "show"
       show_id
     when "find"
-      contact_finded = Contact.find(ARGV[1].downcase) 
+      return  (p "type something after find") if ARGV[1].nil?
+      contact_finded = Contact.search(ARGV[1].downcase) 
       contact_finded.each{|x| x.display}
     when "help"
       self.help
