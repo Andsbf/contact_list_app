@@ -10,6 +10,7 @@ require_relative './lib/phone'
 
 puts "Establishing connection to database ..."
 ActiveRecord::Base.establish_connection(
+  #heroku pg:psql --app heroku-postgres-05dfbfb3 HEROKU_POSTGRESQL_CRIMSON
   adapter: 'postgresql',
   encoding: 'unicode',
   pool: 5,
