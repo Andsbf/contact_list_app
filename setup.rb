@@ -1,7 +1,7 @@
 require 'active_record'
 
 # Output messages from AR to STDOUT
-ActiveRecord::Base.logger = Logger.new(STDOUT)
+# ActiveRecord::Base.logger = Logger.new(STDOUT)
 
 puts "Establishing connection to database ..."
 ActiveRecord::Base.establish_connection(
@@ -17,7 +17,7 @@ ActiveRecord::Base.establish_connection(
 )
 puts "CONNECTED"
 
-puts "Setting up Database (recreating tables) ..."
+# puts "Setting up Database (recreating tables) ..."
 
 # ActiveRecord::Schema.define do
   # drop_table :contacts if ActiveRecord::Base.connection.table_exists?(:contacts)
@@ -25,12 +25,11 @@ puts "Setting up Database (recreating tables) ..."
   # create_table :contacts do |t|
   #   t.column :fname, :string
   #   t.column :lname, :string
-  #   t.column :mens_apparel, :boolean
-  #   t.column :womens_apparel, :boolean
+  #   t.column :email, :string
   #   t.timestamps
   # end
   # create_table :phones do |table|
-  #   table.references :store
+  #   table.references :contacts
   #   table.column :first_name, :string
   #   table.column :last_name, :string
   #   table.column :hourly_rate, :integer
@@ -38,4 +37,4 @@ puts "Setting up Database (recreating tables) ..."
   # end
 # end
 
-puts "Setup DONE\n\n"
+puts "Setup DONE\n"

@@ -21,11 +21,10 @@ class Application
     when "list"
       list #lists all contacts
     when "show"
-      show_id
+      show_id(ARGV[1].to_i)
     when "find"
       return  (p "type something after find") if ARGV[1].nil?
-      contact_finded = Contact.search(ARGV[1].downcase) 
-      contact_finded.each{|x| x.display}
+      find (ARGV[1].downcase)
     when "help"
       self.help
     when "phone"
@@ -43,46 +42,54 @@ class Application
   def create_contact
     p "Please input contact email:"
     email = STDIN.gets.chomp  
-    if new?(email) == []
+
+    if in_use?(email) == []
       p "Please input contact first name:"
       fname = STDIN.gets.chomp
       p "Please input contact last name:"
       lname = STDIN.gets.chomp
-      Contact.create(fname, lname, email)
+      Contact.create(fname: fname, lname: lname, email: email)
     else
       p "Email already exists in your contact list!"
     end
   end
+
+  def find(string)
+    result = Contact.where("fname LIKE ? OR lname LIKE ? OR email LIKE ?","%#{string}%","%#{string}%","%#{string}%")
+    result.each { |contact| contact.display}
+  end
     
   def list
-    Contact.all.each { |contact| contact.display }
+    puts "ID |            contact"
+    Contact.all.order(:fname).each { |contact| contact.display }
   end
 
-  def new?(email)
-    Contact.new?(email)
+  def in_use?(email) 
+    Contact.where(email: email)
   end
 
-  def show_id
-    id = (ARGV[1].to_i)
-    raise "Empty input" if ARGV[1] == nil
-    contact_to_show = Contact.find_by_id(id) 
-    contact_to_show ? contact_to_show.display_detail : (puts "ID not found!")
-    rescue
-      p "please input a contact id"
+  def show_id (id)
+    Contact.find(id).display
   end
 
   def delete(id)
-    Contact.delete(id)
-    list
+    Contact.find(id).display
+    p "Are you sure?"
+    confirmation = STDIN.gets.chomp.downcase
+    binding.pry
+    if ['yes','y'].include? confirmation
+    Contact.find(id).destroy
+    end
+    
   end
 
   def update(id)
 
     return nil if id == 0
     
-    tobe_updated = Contact.find_by_id(id) 
-    
+    tobe_updated = Contact.find(id)
     tobe_updated.display
+
     p "what do you want to update in?(type email of name)"
     what_to_update = STDIN.gets.chomp
 
@@ -90,32 +97,29 @@ class Application
     when "email"
       p "type new email:"
       new_data = STDIN.gets.chomp
-      tobe_updated.email = new_data
+      tobe_updated.update(email: new_data)
     when "name"
       p "type new first name:"
       new_data = STDIN.gets.chomp
-      tobe_updated.fname = new_data
+      tobe_updated.update(fname: new_data)
     else
       raise "invalid Field"
     end
-
-    Contact.update(tobe_updated)
-    list
-    rescue NoMethodError,"Invalid ID"
+    tobe_updated.display
   end
 
   def add_phone(id)
     return nil if id == 0
-    tobe_addphone = Contact.find_by_id(id)
+    tobe_addphone = Contact.find(id)
     tobe_addphone.display
 
     puts "Digit Phone number?"
     phone_num = STDIN.gets.chomp
     p "type of phone?(mobile, home, office)"
     phone_type = STDIN.gets.chomp 
-    phone_to_add = Phone.new(phone_type, phone_num,tobe_addphone.id)
-    phone_to_add.save
-
+    
+    tobe_addphone.phones.create(phone_type: phone_type, num: phone_num)
+    
   end
 
 end
