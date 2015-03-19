@@ -115,9 +115,7 @@ class Application
     phone_type = STDIN.gets.chomp 
     phone_to_add = Phone.new(phone_type, phone_num,tobe_addphone.id)
     phone_to_add.save
-
   end
-
 end
 
 

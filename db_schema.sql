@@ -6,12 +6,12 @@
 --                       );
 
 
-CREATE TABLE phones(
-                     id serial PRIMARY KEY NOT NULL,
-                     contact_id INTEGER NOT NULL,
-                     type VARCHAR(40) ,
-                     num VARCHAR(40) NOT NULL
-);
+-- CREATE TABLE phones(
+--                      id serial PRIMARY KEY NOT NULL,
+--                      contact_id INTEGER NOT NULL,
+--                      type VARCHAR(40) ,
+--                      num VARCHAR(40) NOT NULL
+-- );
 
   
 
