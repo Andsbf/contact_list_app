@@ -1,7 +1,5 @@
 class Application
 
-# attr_accessor
-
   def help
     puts "List of available commands:
           new  - Create a new contacts

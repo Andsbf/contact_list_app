@@ -1,13 +1,9 @@
-require_relative 'contact_database'
 require_relative 'phone'
 require 'active_record'
-
-
 
 class Contact < ActiveRecord::Base
 
   has_many :phones
-
  
   def display   
     puts "#{id} - #{fname} #{lname}: #{email};"
