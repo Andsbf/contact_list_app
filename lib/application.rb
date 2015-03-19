@@ -12,7 +12,6 @@ class Application
 
 
   def user_input
-    
     case ARGV[0]
     when "new"
       create_contact
@@ -39,7 +38,7 @@ class Application
 
   def create_contact
     p "Please input contact email:"
-    email = STDIN.gets.chomp  
+    email = STDIN.gets.chomp.downcase  
 
     if in_use?(email) == []
       p "Please input contact first name:"
@@ -82,7 +81,6 @@ class Application
   end
 
   def update(id)
-
     return nil if id == 0
     
     tobe_updated = Contact.find(id)
@@ -117,9 +115,7 @@ class Application
     phone_type = STDIN.gets.chomp 
     
     tobe_addphone.phones.create(phone_type: phone_type, num: phone_num)
-    
   end
-
 end
 
 

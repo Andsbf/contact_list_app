@@ -1,7 +1,12 @@
+require 'pry'
 require 'active_record'
 
+require_relative './lib/contact'
+require_relative './lib/application'
+require_relative './lib/phone'
+
 # Output messages from AR to STDOUT
-ActiveRecord::Base.logger = Logger.new(STDOUT)
+# ActiveRecord::Base.logger = Logger.new(STDOUT)
 
 puts "Establishing connection to database ..."
 ActiveRecord::Base.establish_connection(

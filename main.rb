@@ -1,7 +1,4 @@
 require_relative 'setup.rb'
-require_relative 'contact'
-require_relative 'application'
-require 'pry'
 
 
 raise "\n

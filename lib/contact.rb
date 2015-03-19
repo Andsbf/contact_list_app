@@ -1,3 +1,6 @@
+require_relative 'phone'
+require 'active_record'
+
 class Contact < ActiveRecord::Base
 
   has_many :phones

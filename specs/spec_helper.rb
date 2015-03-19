@@ -16,6 +16,7 @@ rescue LoadError
   # ignore
 end
     
-safely_require 'contact.rb'
-safely_require 'application.rb'
-safely_require 'contact_list.rb'
+safely_require '../lib/contact.rb'
+safely_require '../lib/application.rb'
+safely_require '../lib/phone.rb'
+safely_require '../main.rb'
